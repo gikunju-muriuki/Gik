@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Portfolio</title>
+    <!-- Importing a clean, modern coding font -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #38b6ff;     /* Sampled from your vibrant jacket */
+            --brand-yellow: #ffde59;   /* Sampled from your inner t-shirt */
+            --text-dark: #0a0a0a;
+            --bg-overlay: rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Fira Code', monospace;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen Background Image Setup */
+        .fullscreen-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('gik.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        /* Subtle dark vignette to blend text seamlessly into the black areas */
+        .vignette-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 80%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Floating HTML5 Canvas Particle System */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Primary Content Grid Layout */
+        .portfolio-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 4rem;
+            z-index: 4;
+        }
+
+        /* Text Layout Blocks targeting the upper left and right zones */
+        .content-zone {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 10vh;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .left-zone {
+            align-items: flex-start;
+            text-align: left;
+            padding-right: 5%;
+            animation-delay: 0.2s;
+        }
+
+        .right-zone {
+            align-items: flex-end;
+            text-align: right;
+            padding-left: 5%;
+            animation-delay: 0.5s;
+        }
+
+        /* Typography Styles using Jacket Blue */
+        .syntax-keyword {
+            color: var(--brand-yellow);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            color: var(--brand-blue);
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 420px;
+            margin-bottom: 2rem;
+        }
+
+        /* Interactive Call-to-Action Buttons using T-Shirt Yellow */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--brand-yellow);
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 222, 89, 0.2);
+        }
+
+        .cta-button:hover {
+            background-color: transparent;
+            color: var(--brand-yellow);
+            border-color: var(--brand-yellow);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 222, 89, 0.4);
+        }
+
+        .cta-button span {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover span {
+            transform: translateX(5px);
+        }
+
+        /* On-Load CSS Animation Keyframes */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Layout fixes for smaller/mobile monitors */
+        @media (max-width: 900px) {
+            .portfolio-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                gap: 3rem;
+                padding: 2rem;
+            }
+            .content-zone {
+                padding-top: 5vh;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            p {
+                max-width: 100%;
+            }
+            /* Darkens the background slightly more on mobile devices to protect text clarity */
+            .fullscreen-bg::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient UI Foundation -->
+    <div class="fullscreen-bg"></div>
+    <div class="vignette-overlay"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Structural Text Overlays -->
+    <main class="portfolio-container">
+        
+        <!-- Left Side: Above Shoulder Area -->
+        <section class="content-zone left-zone">
+            <div class="syntax-keyword">const developer = {</div>
+            <h1>Creative<br>Code Solver</h1>
+            <p>I architect clean interfaces, build reliable backend structures, and turn creative layout visions into production-grade systems.</p>
+            <a href="#projects" class="cta-button">
+                View My Repositories <span>&rarr;</span>
+            </a>
+        </section>
+
+        <!-- Right Side: Above Shoulder Area -->
+        <section class="content-zone right-zone">
+            <div class="syntax-keyword">Status: Available</div>
+            <h1>Building Latest<br>Deployments</h1>
+            <p>Take a look through my interactive project dashboard to view live application demos, software builds, and active codebases.</p>
+            <a href="#latest" class="cta-button">
+                Explore Projects <span>&rarr;</span>
+            </a>
+        </section>
+        
+    </main>
+
+    <!-- Javascript for Active Particle Canvas Animation -->
+    <script>
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particlesArray = [];
+        const numberOfParticles = 65;
+
+        // Automatically match browser sizing
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Particle blueprints matching theme palettes
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() * 0.4) - 0.2;
+                this.speedY = -(Math.random() * 0.5 + 0.1); // Steady slow floating upward motion
+                // Alternates particle colors between jacket blue and shirt yellow
+                this.color = Math.random() > 0.5 ? '#38b6ff' : '#ffde59';
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Loop seamlessly back to bottom if particle exits off screen top
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+                if (this.x < 0 || this.x > canvas.width) {
+                    this.speedX = -this.speedX;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
