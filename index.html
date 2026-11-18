@@ -1,381 +1,633 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edward Gikunju Muriuki | Portfolio</title>
-    <!-- Importing a clean, modern coding font -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <title>BNWT v11 — Technical Whitepaper &amp; System Architecture | Gikunju Muriuki</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        pureblack: '#000000',
+                        elevated: '#0a0a0a',
+                        surface: '#111111',
+                        hairline: '#222222',
+                        muted: '#a0a0a0',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --brand-blue: #38b6ff;     /* Sampled from your vibrant jacket */
-            --brand-yellow: #ffde59;   /* Sampled from your inner t-shirt */
-            --text-dark: #0a0a0a;
-            --bg-overlay: rgba(0, 0, 0, 0.45);
+        /* Custom Monochrome Scrollbar & Precision Hairlines */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        ::-webkit-scrollbar-track {
+            background: #000000;
+            border-left: 1px solid #222222;
         }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            font-family: 'Fira Code', monospace;
-            background-color: #000;
-            overflow-x: hidden;
-        }
-
-        /* Fullscreen Background Image Setup */
-        .fullscreen-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('gik.jpg');
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
-            z-index: 1;
-        }
-
-        /* Subtle dark vignette to blend text seamlessly into the black areas */
-        .vignette-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 80%);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* Floating HTML5 Canvas Particle System */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        /* Primary Content Grid Layout */
-        .portfolio-container {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding: 4rem;
-            z-index: 4;
-        }
-
-        /* Text Layout Blocks targeting the upper left and right zones */
-        .content-zone {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding-top: 10vh;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .left-zone {
-            align-items: flex-start;
-            text-align: left;
-            padding-right: 5%;
-            animation-delay: 0.2s;
-        }
-
-        .right-zone {
-            align-items: flex-end;
-            text-align: right;
-            padding-left: 5%;
-            animation-delay: 0.5s;
-        }
-
-        /* Typography Styles using Jacket Blue */
-        .syntax-keyword {
-            color: var(--brand-yellow);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-        }
-
-        h1 {
-            color: var(--brand-blue);
-            font-size: 2.8rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        p {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 1rem;
-            line-height: 1.6;
-            max-width: 420px;
-            margin-bottom: 2rem;
-        }
-
-        /* Interactive Call-to-Action Buttons using T-Shirt Yellow */
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--brand-yellow);
-            color: var(--text-dark);
-            text-decoration: none;
-            padding: 0.8rem 2rem;
-            font-weight: 700;
-            font-size: 0.95rem;
+        ::-webkit-scrollbar-thumb {
+            background: #333333;
             border-radius: 4px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 222, 89, 0.2);
         }
-
-        .cta-button:hover {
-            background-color: transparent;
-            color: var(--brand-yellow);
-            border-color: var(--brand-yellow);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 222, 89, 0.4);
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffffff;
         }
-
-        .cta-button span {
-            margin-left: 8px;
-            transition: transform 0.3s ease;
+        ::selection {
+            background: #ffffff;
+            color: #000000;
         }
-
-        .cta-button:hover span {
-            transform: translateX(5px);
-        }
-
-        /* On-Load CSS Animation Keyframes */
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive Layout fixes for smaller/mobile monitors */
-        @media (max-width: 900px) {
-            .portfolio-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto;
-                gap: 3rem;
-                padding: 2rem;
-            }
-            .content-zone {
-                padding-top: 5vh;
-                align-items: center !important;
-                text-align: center !important;
-            }
-            h1 {
-                font-size: 2.2rem;
-            }
-            p {
-                max-width: 100%;
-            }
-            /* Darkens the background slightly more on mobile devices to protect text clarity */
-            .fullscreen-bg::before {
-                content: '';
-                position: absolute;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-            }
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
         }
     </style>
 </head>
-<body>
+<body class="bg-pureblack text-white font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden">
 
-    <!-- Ambient UI Foundation -->
-    <div class="fullscreen-bg"></div>
-    <div class="vignette-overlay"></div>
-    <canvas id="particles-canvas"></canvas>
+    <!-- Sticky Top Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-hairline">
+        <!-- Reading Progress Bar -->
+        <div class="w-full h-[2px] bg-hairline">
+            <div id="reading-progress" class="h-full bg-white w-0 transition-all duration-75"></div>
+        </div>
 
-    <!-- Structural Text Overlays -->
-    <main class="portfolio-container">
-        
-        <!-- Left Side: Above Shoulder Area -->
-        <section class="content-zone left-zone">
-            <div class="syntax-keyword">Edward Gikunju Muriuki</div>
-            <h1>Full Stack<br>Software Engineer</h1>
-            <p>Fluent in Hyper Text Markup Language (HTML), MetaQuotes5 (MQL5), HTML5, Cascading Style Sheet, JavaScript, Python and C++.</p>
-            <!--
-            <a href="https://bnwt.pages.dev" class="cta-button">
-                View BNWT <span>&rarr;</span>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Brand & Release Tag -->
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="w-7 h-7 bg-white text-black font-mono font-bold text-xs flex items-center justify-center rounded">
+                    B11
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold tracking-tight text-sm leading-none">BNWT <span class="font-mono font-normal text-muted">v11.0</span></span>
+                    <span class="font-mono text-[10px] text-muted uppercase tracking-widest mt-0.5">Whitepaper</span>
+                </div>
+            </div>
+
+            <!-- Section Jump Links (Desktop) -->
+            <nav aria-label="Document Sections" class="hidden md:flex items-center gap-6 text-xs font-mono text-muted">
+                <a href="#sec-overview" class="hover:text-white transition-colors">01.OVERVIEW</a>
+                <a href="#sec-ingestion" class="hover:text-white transition-colors">02.INGESTION</a>
+                <a href="#sec-canvas" class="hover:text-white transition-colors">03.CANVAS</a>
+                <a href="#sec-quant" class="hover:text-white transition-colors">04.QUANT_ENGINES</a>
+                <a href="#sec-risk" class="hover:text-white transition-colors">05.RISK_PWA</a>
+            </nav>
+
+            <!-- Quick CTA Button -->
+            <a href="https://bnwt.pages.dev/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-white text-black border border-white rounded hover:bg-black hover:text-white transition-all duration-200 shrink-0">
+                <span>Go to BNWT</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17"/>
+                </svg>
             </a>
-            -->
+        </div>
+    </header>
+
+    <!-- Editorial Hero Section -->
+    <section class="relative border-b border-hairline grid-bg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+            <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded border border-white/25 bg-elevated font-mono text-[11px] text-muted uppercase tracking-widest mb-6">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span>Technical Whitepaper &amp; Architectural Specification // Release 11.0</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight uppercase leading-[1.08] max-w-4xl">
+                BNWT v11 Technical Whitepaper &amp; System Architecture
+            </h1>
+
+            <p class="mt-6 text-base sm:text-lg text-muted max-w-3xl leading-relaxed">
+                An exhaustive software engineering dissection of the zero-backend financial charting terminal: asynchronous multi-exchange WebSocket multiplexing, high-DPI HTML5 2D Canvas rasterization, Pearson correlation pattern forecasting, institutional liquidity zone scanning, Decile Momentum Grid analytics, real-time macroeconomic event feeds, and robust multi-API risk engines.
+            </p>
+
+            <!-- Developer Credit & Telemetry Metadata Strip -->
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-4 rounded-lg bg-elevated border border-white/20">
+                    <div class="font-mono text-[10px] uppercase tracking-widest text-muted">Lead Developer &amp; Architect</div>
+                    <div class="mt-1 text-base font-extrabold tracking-tight text-white">Gikunju Muriuki</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline">
+                    <div class="font-mono text-[10px] uppercase tracking-widest text-muted">Runtime &amp; Rendering Stack</div>
+                    <div class="mt-1 font-mono text-sm font-bold text-white">ES6+ SPA // HTML5 2D Canvas</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline">
+                    <div class="font-mono text-[10px] uppercase tracking-widest text-muted">Supported Liquidity Venues</div>
+                    <div class="mt-1 font-mono text-sm font-bold text-white">7 Exchanges (WSS + REST)</div>
+                </div>
+            </div>
+
+            <!-- Mobile Section Selector -->
+            <div class="mt-8 md:hidden">
+                <label for="mobile-nav" class="block font-mono text-[10px] uppercase tracking-widest text-muted mb-2">Jump to Section</label>
+                <select id="mobile-nav" onchange="if(this.value) window.location.hash = this.value"
+                        class="w-full bg-surface border border-white/30 text-white font-mono text-xs p-3 rounded-lg focus:outline-none focus:border-white">
+                    <option value="#sec-overview">01. System Overview &amp; Architectural Philosophy</option>
+                    <option value="#sec-ingestion">02. Multi-Exchange Ingestion &amp; Streaming</option>
+                    <option value="#sec-canvas">03. Canvas Coordinate Geometry &amp; Viewport</option>
+                    <option value="#sec-quant">04. Quantitative &amp; Algorithmic Engines</option>
+                    <option value="#sec-risk">05. Risk Management &amp; Platform Resilience</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Whitepaper Content Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-24">
+
+        <!-- ===============================================================
+             SECTION 01: SYSTEM OVERVIEW & ARCHITECTURAL PHILOSOPHY
+             =============================================================== -->
+        <section id="sec-overview" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-mono text-xs text-muted uppercase tracking-widest">Section 01</span>
+                    <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">System Overview &amp; Architectural Philosophy</h2>
+                </div>
+                <span class="font-mono text-xs text-muted">ENTRY: startApp() // DOMContentLoaded</span>
+            </div>
+
+            <!-- Dual-Layer Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Technical Engineering Layer -->
+                <div class="lg:col-span-7 p-6 rounded-xl bg-elevated border border-hairline space-y-4">
+                    <div class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-white bg-surface px-2.5 py-1 rounded border border-hairline">
+                        <span>System Architecture / Engineering</span>
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        <strong>BNWT Version 11</strong>, architected by <strong>Gikunju Muriuki</strong>, is a client-side, zero-backend Single-Page Application (SPA) engineered in pure, dependency-free ECMAScript (ES6+). By bypassing Virtual DOM diffing overhead and third-party charting abstractions, the runtime communicates directly with the browser’s native <strong>HTML5 2D Canvas API</strong>, <strong>WebSocket (WSS)</strong> bidirectional sockets, <strong>Fetch REST pipelines</strong>, and <strong>Web Storage (<code>localStorage</code>)</strong>.
+                    </p>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Bootstrapping occurs deterministically via <code>startApp()</code> upon <code>DOMContentLoaded</code>. To eliminate <strong>Temporal Dead Zone (TDZ)</strong> <code>ReferenceError</code> exceptions inside asynchronous frame callbacks, critical UI overlays (<code>dmgInfoPanel</code>, <code>dmgInfoCloseBtn</code>, <code>dmgInfoContent</code>) are bound immediately at closure initialization. The architecture decouples asynchronous network mutation from display rasterization through a dirty-flag <code>requestAnimationFrame</code> (<strong>rAF</strong>) render loop gated by <code>needsRender</code>, paired with an integrated custom toast notification manager and service worker caching pipeline.
+                    </p>
+                    <div class="p-4 rounded-lg bg-pureblack border border-hairline font-mono text-xs space-y-1.5 text-muted">
+                        <div><span class="text-white font-bold">DPR Scaling:</span> canvas.width = rect.width * (window.devicePixelRatio || 1)</div>
+                        <div><span class="text-white font-bold">Render Gate:</span> if (needsRender) { render(); needsRender = false; }</div>
+                        <div><span class="text-white font-bold">State Hydration:</span> localStorage.getItem("bnw_chart_state") // Fault-tolerant JSON</div>
+                    </div>
+                </div>
+
+                <!-- Plain-English Translation Layer -->
+                <div class="lg:col-span-5 p-6 rounded-xl bg-surface border-l-4 border-white border-y border-r border-hairline flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">
+                            Plain-English Translation // What Is This App?
+                        </div>
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Think of BNWT as a professional Wall Street trading terminal built completely from scratch by <strong>Gikunju Muriuki</strong> that runs directly inside your browser or phone with zero middleman servers slowing it down.
+                        </p>
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Instead of redrawing the screen endlessly and draining your battery, the app only repaints pixels when a new live price arrives or when you touch the chart. It also remembers your exact setup—exchange, coin, zoom level, and indicators—and saves downloaded price bars to your device so the terminal still works even if your Wi-Fi disconnects.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-hairline font-mono text-[11px] text-muted">
+                        STORAGE NAMESPACES: bnw_chart_state • bnw_candles_* • bnw_calc_state
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architectural Matrix Table -->
+            <div class="overflow-x-auto rounded-xl border border-hairline">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                        <tr class="bg-white text-black font-mono uppercase text-[11px]">
+                            <th class="p-3.5 border-r border-black/20">Subsystem</th>
+                            <th class="p-3.5 border-r border-black/20">Core Engineering Mechanism</th>
+                            <th class="p-3.5">Functional Output</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-hairline bg-elevated">
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">MarketProviders</td>
+                            <td class="p-3.5 text-muted">Polymorphic REST adapter map + <code>resolveAssetPair()</code> symbol normalizer</td>
+                            <td class="p-3.5 text-white/90">Unifies 7 exchanges into standardized chronological OHLCV arrays.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">initWebSocketEngine</td>
+                            <td class="p-3.5 text-muted">Full-duplex WSS multiplexer + exponential backoff REST polling fallback</td>
+                            <td class="p-3.5 text-white/90">Sub-second live candle updates with automatic self-healing failover.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">render() Pipeline</td>
+                            <td class="p-3.5 text-muted">8-layer painter's algorithm on DPR-scaled HTML5 2D Canvas</td>
+                            <td class="p-3.5 text-white/90">60+ FPS candlesticks, session bands, crosshairs, and analytical overlays.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">Ghost Candles</td>
+                            <td class="p-3.5 text-muted">Z-normalized sliding-window Pearson correlation (<span class="font-mono">r ≥ 0.70</span>)</td>
+                            <td class="p-3.5 text-white/90">Finds historical structural twins and projects future price trajectories.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">SMC &amp; DMG Engines</td>
+                            <td class="p-3.5 text-muted">ATR-normalized Order Block/FVG scanner + 11-tier decile range matrix</td>
+                            <td class="p-3.5 text-white/90">Maps institutional supply/demand zones and premium/discount pricing.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold font-mono text-white">TopDownEngine</td>
+                            <td class="p-3.5 text-muted">6-timeframe SMA(20/50) crossover scanner + annualized <span class="font-mono">σ</span> index</td>
+                            <td class="p-3.5 text-white/90">Real-time macro trend alignment and annualized standard deviation volatility.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <!-- Right Side: Above Shoulder Area -->
-        <section class="content-zone right-zone">
-            <div class="syntax-keyword">PRO</div>
-            <h1>Code<br>Base</h1>
-            <p>Flawless Frontend/Backend Programming and Algorithms.</p>
-            <a href="#latest" class="cta-button">
-                Explore Featured Projects <span>&rarr;</span>
-            </a>
+        <!-- ===============================================================
+             SECTION 02: MULTI-EXCHANGE DATA INGESTION & STREAMING PIPELINE
+             =============================================================== -->
+        <section id="sec-ingestion" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-mono text-xs text-muted uppercase tracking-widest">Section 02</span>
+                    <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">Multi-Exchange Data Ingestion &amp; Streaming Pipeline</h2>
+                </div>
+                <span class="font-mono text-xs text-muted">7 LIQUIDITY VENUES // WSS + REST</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-7 p-6 rounded-xl bg-elevated border border-hairline space-y-4">
+                    <div class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-white bg-surface px-2.5 py-1 rounded border border-hairline">
+                        <span>System Architecture / Engineering</span>
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        External liquidity providers enforce incompatible ticker formats, timestamp epochs (seconds vs. milliseconds), and array orderings. The <code>MarketProviders</code> strategy map and <code>resolveAssetPair(exchange, asset)</code> normalize <strong>Binance</strong>, <strong>Hyperliquid</strong>, <strong>Bybit</strong>, <strong>XT</strong>, <strong>Coinbase</strong>, <strong>Kraken</strong>, and <strong>BitMart</strong> into canonical ascending <code>{time, open, high, low, close, volume}</code> structures—including specialized routing for Nikkei 225 (<code>JP225</code> → <code>xyz:JP225</code> on Hyperliquid, <code>NK225USDT</code> on Binance, <code>JP225USDT</code> on Bybit) and Tether Gold (<code>XAUT</code> → <code>XAUTUSDT</code> on Binance).
+                    </p>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Live ticks arrive over full-duplex WebSockets (<code>initWebSocketEngine</code>) and mutate the trailing bar inside <code>handleIncomingTick()</code>, enforcing a strict <code>10,000</code>-candle circular buffer cap via <code>candles.shift()</code>. If a socket fails or is unsupported, <code>activateRESTFallbackLoop()</code> engages an <strong>exponential backoff</strong> poller starting at <code>2,000 ms</code> and scaling by <code>1.5×</code> up to <code>30,000 ms</code> during outages. Panning near the oldest loaded candle triggers mutex-locked <code>loadMoreHistory()</code> pagination with <code>O(1)</code> <code>Set</code> timestamp deduplication and seamless <code>scrollOffset</code> compensation.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-5 p-6 rounded-xl bg-surface border-l-4 border-white border-y border-r border-hairline space-y-3">
+                    <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">
+                        Plain-English Translation // Live Feeds &amp; Self-Healing
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Every exchange speaks a different technical language—some send timestamps in seconds, others in milliseconds, and some send price lists backward. BNWT acts as a universal translator that converts all 7 exchanges into one clean format.
+                    </p>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        It opens a live WebSocket "hotline" so every trade moves the chart in real time. If your connection drops, it automatically switches to checking every 2 seconds (slowing gently up to 30 seconds if offline so your device never freezes). Dragging backward into the past quietly downloads older history without jumping your screen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 7 Exchanges Specification Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">01. BINANCE</div>
+                    <div class="text-muted">REST: /api/v3/klines</div>
+                    <div class="text-muted">WSS: stream.binance.com:9443</div>
+                    <div class="text-white/80 text-[11px] pt-1">Native ms epochs; &amp;endTime pagination; @kline_{tf} stream.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">02. HYPERLIQUID</div>
+                    <div class="text-muted">REST: POST /info</div>
+                    <div class="text-muted">WSS: api.hyperliquid.xyz/ws</div>
+                    <div class="text-white/80 text-[11px] pt-1">candleSnapshot JSON; routes JP225 to xyz:JP225 perpetuals.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">03. BYBIT</div>
+                    <div class="text-muted">REST: /v5/market/kline</div>
+                    <div class="text-muted">WSS: stream.bybit.com/v5</div>
+                    <div class="text-white/80 text-[11px] pt-1">Reverses descending result.list; linear/spot category switch.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">04. XT EXCHANGE</div>
+                    <div class="text-muted">REST: /v4/public/kline</div>
+                    <div class="text-muted">WSS: ws.xt.com/public</div>
+                    <div class="text-white/80 text-[11px] pt-1">Lowercase underscore pairs; kline@{pair},{interval} topic.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">05. COINBASE</div>
+                    <div class="text-muted">REST: /products/{id}/candles</div>
+                    <div class="text-muted">WSS: ws-feed.exchange.coinbase</div>
+                    <div class="text-white/80 text-[11px] pt-1">Scales sec × 1000; remaps [t,l,h,o,c]; 300-bar windowing.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">06. KRAKEN</div>
+                    <div class="text-muted">REST: /0/public/OHLC</div>
+                    <div class="text-muted">MODE: Adaptive REST Poll</div>
+                    <div class="text-white/80 text-[11px] pt-1">Maps BTC → XBTUSD; dynamic key extraction; &amp;since lookback.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-elevated border border-hairline space-y-1.5">
+                    <div class="text-white font-bold text-sm">07. BITMART</div>
+                    <div class="text-muted">REST: /quotation/v3/klines</div>
+                    <div class="text-muted">WSS: ws-manager-compress</div>
+                    <div class="text-white/80 text-[11px] pt-1">Seconds-to-ms scaling; &amp;before pagination; spot/ticker feed.</div>
+                </div>
+                <div class="p-4 rounded-lg bg-surface border border-white/30 space-y-1.5 flex flex-col justify-center">
+                    <div class="text-white font-bold text-sm">FAILOVER ENGINE</div>
+                    <div class="text-muted">2000ms → 30000ms (1.5×)</div>
+                    <div class="text-white/90 text-[11px] pt-1">Automatic recovery + localStorage offline fallback.</div>
+                </div>
+            </div>
         </section>
-        
+
+        <!-- ===============================================================
+             SECTION 03: CANVAS COORDINATE GEOMETRY & VIEWPORT TRANSFORMS
+             =============================================================== -->
+        <section id="sec-canvas" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-mono text-xs text-muted uppercase tracking-widest">Section 03</span>
+                    <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">Canvas Coordinate Geometry &amp; Viewport Transforms</h2>
+                </div>
+                <span class="font-mono text-xs text-muted">AFFINE PROJECTION // GESTURE FSM</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-7 p-6 rounded-xl bg-elevated border border-hairline space-y-4">
+                    <div class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-white bg-surface px-2.5 py-1 rounded border border-hairline">
+                        <span>System Architecture / Engineering</span>
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Every frame projects discrete time-series elements onto a 2D Euclidean viewport using affine linear transformations. Horizontal placement maps bar index <code>i</code> via <code>X(i) = chartWidth - (N - 1 - i) * totalBarWidth + scrollOffset</code>, while arbitrary future or historical timestamps are projected through <code>timeToX()</code>. Vertically, <code>yMap(price)</code> maps bounded extrema padded by <code>±55%</code> of the visible range, transitioning seamlessly from automatic scaling (<code>autoScaleY = true</code>) to manual axis compression (<code>manualYScaleFactor ∈ [0.05, 15.0]</code>) and vertical panning (<code>manualYOffset</code>).
+                    </p>
+                    <div class="p-4 rounded-lg bg-pureblack border border-white/20 font-mono text-xs space-y-2">
+                        <div class="text-white font-bold">AFFINE Y-AXIS PROJECTION &amp; UTC SESSION WINDOWS:</div>
+                        <div class="text-muted">yMap(P) = chartHeight − ((P − adjMin) / (adjMax − adjMin)) × (chartHeight − 10)</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 border-t border-hairline text-[11px]">
+                            <div><span class="text-white font-bold">SYDNEY:</span> 21:00–06:00 UTC</div>
+                            <div><span class="text-white font-bold">ASIA:</span> 00:00–09:00 UTC</div>
+                            <div><span class="text-white font-bold">LONDON:</span> 07:00–16:00 UTC</div>
+                            <div><span class="text-white font-bold">NEW YORK:</span> 13:00–22:00 UTC</div>
+                        </div>
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        A unified pointer and touch gesture finite-state machine handles horizontal drag panning, right-edge <code>95px</code> Y-axis vertical scaling (with <code>dblclick</code> auto-scale reset), <code>rAF</code>-throttled wheel zooming (<code>candleWidth ∈ [2px, 50px]</code>), two-finger Euclidean pinch-to-zoom (<code>Math.hypot(Δx, Δy)</code>), and an interactive crosshair HUD displaying live <code>O/H/L/C</code> telemetry.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-5 p-6 rounded-xl bg-surface border-l-4 border-white border-y border-r border-hairline space-y-3">
+                    <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">
+                        Plain-English Translation // Smooth Controls &amp; Sessions
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Behind the scenes, BNWT uses fast geometry math to turn raw numbers (like "$94,250.50 at 14:35") into exact pixel locations on your screen—even when you zoom way in or stretch the price axis vertically.
+                    </p>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        It automatically shades the background to show when major global financial hubs—<strong>Sydney</strong>, <strong>Asia</strong>, <strong>London</strong>, and <strong>New York</strong>—are open for trading, and lets you inspect any candle's exact Open, High, Low, and Close values by hovering your mouse or sliding your finger across the screen.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===============================================================
+             SECTION 04: QUANTITATIVE & ALGORITHMIC ENGINES
+             =============================================================== -->
+        <section id="sec-quant" class="scroll-mt-24 space-y-10">
+            <div class="border-b border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-mono text-xs text-muted uppercase tracking-widest">Section 04</span>
+                    <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">Quantitative &amp; Algorithmic Engines</h2>
+                </div>
+                <span class="font-mono text-xs text-muted">5 PROPRIETARY ANALYTICAL MODULES</span>
+            </div>
+
+            <!-- 4.1 Ghost Candles Engine -->
+            <article class="p-6 sm:p-8 rounded-xl bg-elevated border border-hairline space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold uppercase tracking-tight">4.1 Ghost Candles Pattern Matching Engine</h3>
+                    <span class="font-mono text-xs px-2.5 py-1 rounded bg-pureblack border border-white/25">computeGhostPredictions() // r ≥ 0.70</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 space-y-4">
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            This non-parametric forecasting module extracts the trailing <code>W = min(35, ⌊N/3⌋)</code> closing prices and normalizes them into scale-invariant relative return vectors: <code>x[k] = (close[k] - close[0]) / close[0]</code>. It then performs an exhaustive sliding-window scan across historical data up to <code>N - W - 30</code>, evaluating structural similarity via the <strong>Pearson Product-Moment Correlation Coefficient</strong> mapped onto <code>[0, 1]</code> via <code>(r + 1) / 2</code>.
+                        </p>
+                        <div class="p-4 rounded-lg bg-pureblack border border-hairline font-mono text-xs overflow-x-auto">
+                            <div class="text-white font-bold mb-1">PEARSON SIMILARITY &amp; AFFINE PROJECTION:</div>
+                            <div class="text-muted">Score = ( [∑(xᵢyᵢ) − (∑xᵢ∑yᵢ)/W] / √[(∑xᵢ² − (∑xᵢ)²/W)(∑yᵢ² − (∑yᵢ)²/W)] + 1 ) / 2</div>
+                            <div class="text-white mt-2">If Score ≥ 0.70: P_proj[j] = P_hist[j] × (currentEndPrice / sourceEndPrice)</div>
+                        </div>
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Matches scoring below <code>70%</code> are discarded. Valid matches extract the subsequent <code>30</code> historical candles, rescale all OHLC coordinates by <code>scaleRatio</code>, and project them forward onto future timestamps (<code>lastRealTime + (idx + 1) * avgInterval</code>).
+                        </p>
+                    </div>
+                    <div class="lg:col-span-5 p-5 rounded-lg bg-surface border-l-4 border-white space-y-2.5">
+                        <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">Plain-English Translation</div>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Financial markets often repeat historical patterns. Ghost Candles takes the shape of the last 35 price bars and searches backward through history to find a past moment that moved the exact same way (requiring at least a 70% match). When it finds a match, it takes the 30 candles that happened <em>right after</em> that past event, resizes them to today's price, and draws translucent "ghost" bars into the future so you can see how the market played out last time.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 4.2 Smart Money Concepts (SMC) Engine -->
+            <article class="p-6 sm:p-8 rounded-xl bg-elevated border border-hairline space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold uppercase tracking-tight">4.2 Smart Money Concepts (SMC) Institutional Zone Scanner</h3>
+                    <span class="font-mono text-xs px-2.5 py-1 rounded bg-pureblack border border-white/25">buildSmcZones() // OB &amp; FVG</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 space-y-4">
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Operating on any selected reference timeframe (<code>1m</code>–<code>1M</code>), <code>buildSmcZones()</code> computes a 30-candle rolling range baseline (<code>avgRange</code>) across multi-timeframe series to adaptively calibrate institutional displacement thresholds across disparate asset classes:
+                        </p>
+                        <ul class="space-y-2 text-sm text-white/90 list-disc pl-5">
+                            <li><strong>Order Blocks (<code>bullish-ob</code> / <code>bearish-ob</code>):</strong> Triggered when an impulse candle displaces price by <code>&gt; 1.2 × avgRange</code> immediately following an opposing candle whose body spans <code>≥ 0.3 × avgRange</code>.</li>
+                            <li><strong>Fair Value Gaps (<code>bullish-fvg</code> / <code>bearish-fvg</code>):</strong> Detects three-candle liquidity voids where <code>current.low &gt; prev2.high</code> (bullish) or <code>current.high &lt; prev2.low</code> (bearish) with gap size <code>≥ 0.35 × avgRange</code>.</li>
+                            <li><strong>Mitigation Lifecycle &amp; Deduplication:</strong> Simulates every zone forward from <code>formIndex + 1</code>; zones breached by subsequent closes (OB) or wicks (FVG) are invalidated (<code>isValid = false</code>). Surviving zones are deduplicated within <code>0.2 × avgRange</code> and capped at the 6 freshest active levels.</li>
+                        </ul>
+                    </div>
+                    <div class="lg:col-span-5 p-5 rounded-lg bg-surface border-l-4 border-white space-y-2.5">
+                        <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">Plain-English Translation</div>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Large banks and hedge funds leave footprints when they place massive orders. The SMC scanner automatically draws shaded boxes around <strong>Order Blocks</strong> (the exact price zones where big players launched fast moves) and <strong>Fair Value Gaps</strong> (unfilled price gaps left behind during sudden surges)—and automatically erases those boxes once the market comes back to fill them.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 4.3 Decile Momentum Grid (DMG) & Psychological Levels -->
+            <article class="p-6 sm:p-8 rounded-xl bg-elevated border border-hairline space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold uppercase tracking-tight">4.3 Decile Momentum Grid (DMG) &amp; Psychological Confluence</h3>
+                    <span class="font-mono text-xs px-2.5 py-1 rounded bg-pureblack border border-white/25">getDmgLevels() // 0%–100% MATRIX + DMG WIDGET</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 space-y-4">
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            <code>findPriceContainingCandle()</code> scans backward through the chosen higher-timeframe reference series to locate the most recent completed bar enclosing the live price (<code>low ≤ liveClose ≤ high</code>). <code>getDmgLevels()</code> partitions that candle's spread into 11 equidistant decile levels (<code>0%</code> through <code>100%</code>) and classifies live price location into institutional valuation tiers, accompanied by an interactive DMG data panel modal.
+                        </p>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-[11px]">
+                            <div class="p-2.5 rounded bg-pureblack border border-hairline">
+                                <div class="text-white font-bold">80% – 100%</div>
+                                <div class="text-muted">Super Premium</div>
+                            </div>
+                            <div class="p-2.5 rounded bg-pureblack border border-hairline">
+                                <div class="text-white font-bold">50.01% – 79.99%</div>
+                                <div class="text-muted">At Premium</div>
+                            </div>
+                            <div class="p-2.5 rounded bg-pureblack border border-white/40">
+                                <div class="text-white font-bold">50.0% EXACT</div>
+                                <div class="text-muted">Equilibrium</div>
+                            </div>
+                            <div class="p-2.5 rounded bg-pureblack border border-hairline">
+                                <div class="text-white font-bold">21% – 49.99%</div>
+                                <div class="text-muted">At Discounted</div>
+                            </div>
+                            <div class="p-2.5 rounded bg-pureblack border border-hairline">
+                                <div class="text-white font-bold">0% – 20.99%</div>
+                                <div class="text-muted">Super Discounted</div>
+                            </div>
+                            <div class="p-2.5 rounded bg-pureblack border border-hairline">
+                                <div class="text-white font-bold">±0.35% TOL</div>
+                                <div class="text-muted">Psych Confluence</div>
+                            </div>
+                        </div>
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Simultaneously, asset-calibrated round numbers (e.g., <code>250–25,000</code> steps for BTC; <code>50–5,000</code> for Gold/XAUT; <code>25–1,000</code> for JP225) are computed via <code>generatePsychLevels()</code>. When a DMG decile intersects a psychological level within <code>0.35%</code> tolerance (<code>isPriceAlignedWithPsychLevel</code>), the canvas elevates its stroke weight and glow to signal confluence.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-5 p-5 rounded-lg bg-surface border-l-4 border-white space-y-2.5">
+                        <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">Plain-English Translation</div>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            DMG acts like a 0%-to-100% ruler stretched across a major daily or weekly candle, immediately telling you whether an asset is currently "on sale" (<strong>Super Discounted</strong>) or "overpriced" (<strong>Super Premium</strong>). Tapping the DMG button opens an instant reference sheet detailing exact decile prices, and whenever a decile line lands right on top of a major round number (like $90,000), BNWT highlights it so you spot high-probability reaction zones instantly.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 4.4 Top-Down Multi-Timeframe, Volatility & Macro Headline Monitor -->
+            <article class="p-6 sm:p-8 rounded-xl bg-elevated border border-hairline space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-4">
+                    <h3 class="text-lg sm:text-xl font-extrabold uppercase tracking-tight">4.4 Top-Down Trend, Volatility &amp; Live RSS Headline Monitor</h3>
+                    <span class="font-mono text-xs px-2.5 py-1 rounded bg-pureblack border border-white/25">class TopDownEngine &amp; MarketNewsMonitor</span>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 space-y-4">
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Encapsulated inside the object-oriented <code>TopDownEngine</code> class, this subsystem polls six timeframes (<code>1d</code>, <code>1h</code>, <code>30m</code>, <code>15m</code>, <code>5m</code>, <code>1m</code>) every <code>60,000 ms</code> to evaluate dual Simple Moving Average regimes (<code>SMA20</code> vs. <code>SMA50</code> relative to <code>currentClose</code>) into <strong>STRONG BULLISH</strong>, <strong>WEAK BULLISH</strong>, <strong>STRONG BEARISH</strong>, or <strong>WEAK BEARISH</strong> states. On every live tick, <code>calculateVolatility()</code> computes the 20-period return standard deviation annualized via <code>stdDev × √365 × 100</code>.
+                        </p>
+                        <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                            Complementing the technical engine, <code>MarketNewsMonitor</code> periodically queries RSS-to-JSON endpoints (CoinDesk, Yahoo Finance, Cointelegraph) to broadcast breaking macroeconomic and crypto news as elegant, non-intrusive toast banners with direct article links and persistent deduplication.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-5 p-5 rounded-lg bg-surface border-l-4 border-white space-y-2.5">
+                        <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">Plain-English Translation</div>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Instead of forcing you to click back and forth between six different chart timeframes, this engine scans all six in the background every minute and gives you a clean scorecard—plus a live <strong>Volatility Index</strong> showing how wildly the market is swinging right now, and real-time news headline toasts streaming breaking stories directly onto your screen.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- ===============================================================
+             SECTION 05: RISK MANAGEMENT & PLATFORM RESILIENCE
+             =============================================================== -->
+        <section id="sec-risk" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-white pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="font-mono text-xs text-muted uppercase tracking-widest">Section 05</span>
+                    <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1">Risk Management &amp; Platform Resilience</h2>
+                </div>
+                <span class="font-mono text-xs text-muted">6-API FX SIZING // TV &amp; PWA READY</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-7 p-6 rounded-xl bg-elevated border border-hairline space-y-4">
+                    <div class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-white bg-surface px-2.5 py-1 rounded border border-hairline">
+                        <span>System Architecture / Engineering</span>
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        <strong>Cross-Currency Position Size Calculator (<code>updateCalculator</code>):</strong> Evaluates exact position unit sizing from account equity (<code>calcBalance</code>), risk tolerance percentage (<code>calcRisk</code>), and stop-loss price distance (<code>calcStopLoss</code>). When account currency differs from trade quote currency, <code>getExchangeRate()</code> polls a resilient cascade of 6 independent FX conversion providers (<code>open.er-api.com</code>, <code>frankfurter.app</code>, <code>jsdelivr</code>, <code>cloudflare</code>, <code>exchangerate.host</code>, <code>floatrates.com</code>) with automatic <code>localStorage</code> caching (<code>bnw_fx_rate_*</code>) for offline continuity.
+                    </p>
+                    <div class="p-4 rounded-lg bg-pureblack border border-hairline font-mono text-xs">
+                        <span class="text-white font-bold">SIZING FORMULA:</span> Position Size = (Account Balance × (Risk % / 100) × FX_Rate) / Stop_Loss_Distance
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        <strong>Universal Hardware, PWA &amp; Weekend Resilience:</strong> <code>makeAccessibleForTV()</code> binds <code>tabindex="0"</code> and <code>Enter</code>/<code>Space</code> keyboard events across all interactive buttons alongside an on-screen D-Pad controller for Smart TV remotes. Weekend and global holiday detection (automatically computing Western Easter Sunday for Good Friday and tracking major stock/FX closures) alerts traders to low-liquidity regimes. Standalone PWA detection, service worker caching (<code>sw.js</code>), direct Android APK distribution (<code>bnwt.apk</code>), and automated toast banners guarantee uninterrupted availability across desktop, mobile, and television screens.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-5 p-6 rounded-xl bg-surface border-l-4 border-white border-y border-r border-hairline space-y-3">
+                    <div class="font-mono text-[11px] uppercase tracking-widest text-white font-bold">
+                        Plain-English Translation // Safety &amp; Everywhere Access
+                    </div>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Before you risk a single dollar, the built-in Position Size Calculator tells you the exact safe number of coins or units to buy based on your account size, risk percentage, and stop-loss distance—converting currencies live using a robust fallback network of 6 global exchange rate providers.
+                    </p>
+                    <p class="text-sm sm:text-base text-white/90 leading-relaxed">
+                        Whether you trade on a desktop computer, pinch-to-zoom on a smartphone, install the Android APK app, or click through menus using a Smart TV remote control, BNWT is built to work reliably everywhere, warning you automatically whenever global stock or forex markets close for weekends and holidays.
+                    </p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <section id="latest" style="position: relative; z-index: 4; width: min(1100px, calc(100% - 2rem)); margin: 0 auto 4rem; padding: 0 0 2rem;">
-        <div style="background: rgba(10,10,10,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.35); backdrop-filter: blur(10px);">
-            <div style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffde59; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;">
-                Featured Project
-            </div>
-            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0;">
-                <div style="padding: 2rem;">
-                    <div style="display: inline-block; color: #ffde59; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.85rem;">BNWT</div>
-                    <h2 style="color: #fff; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; margin-bottom: 1rem;">Market intelligence tooling for fast, informed decisions.</h2>
-                    <p style="color: rgba(255,255,255,0.82); max-width: 100%; margin-bottom: 1.25rem; line-height: 1.7;">BNWT is a trading platform designed to consolidate live market data, charting, and actionable analysis in a clear, focused interface. It reflects a practical approach to product design: simpler decisions, cleaner data, and a better user experience.</p>
-
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0 1.5rem;">
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">JavaScript</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">C++</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">Python</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">HTML</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">CSS</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">MQL5</span>
-                        <span style="border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.7); padding: 0.45rem 0.7rem; border-radius: 999px; font-size: 0.7rem;">IndexDB</span>
-                    </div>
-
-                    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 0.5rem;">
-                        <a href="https://bnwt.pages.dev" class="cta-button">Launch BNWT V11<span>&rarr;</span></a>
-                       <!-- 
-                        <a href="https://github.com/gikunju-muriuki/BNWT" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none; padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); color: #fff; background: rgba(255,255,255,0.02); font-weight: 600; font-size: 0.8rem;">GitHub Repo</a>
-                        -->
-                    </div>
+    <!-- ===================================================================
+         CALL-TO-ACTION FOOTER & DEVELOPER ATTRIBUTION
+         =================================================================== -->
+    <footer class="border-t-2 border-white bg-elevated mt-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center space-y-8">
+            <div class="space-y-3 max-w-2xl mx-auto">
+                <div class="font-mono text-xs uppercase tracking-widest text-muted">
+                    BNWT Financial Terminal // Version 11.0
                 </div>
+                <h2 class="text-3xl sm:text-4xl font-black uppercase tracking-tight">
+                    Ready to Launch the Live Terminal?
+                </h2>
+                <p class="text-sm sm:text-base text-muted leading-relaxed">
+                    Experience real-time multi-exchange charting, Ghost Pattern forecasting, Decile Momentum Grids, Smart Money Concepts, and live macroeconomic feeds directly in your browser.
+                </p>
+            </div>
 
-                <aside style="background: rgba(255,255,255,0.02); border-left: 1px solid rgba(255,255,255,0.08); padding: 2rem;">
-                    <h3 style="color: #38b6ff; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem;">Project details</h3>
-                    <div style="display: grid; gap: 0.9rem;">
-                        <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.9rem 1rem; background: rgba(255,255,255,0.02);">
-                            <span style="display: block; color: rgba(255,255,255,0.6); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem;">Role</span>
-                            <strong style="color: #fff; font-size: 0.9rem; line-height: 1.6;">Product design, frontend and Backend implementation, UX direction</strong>
-                        </div>
-                        <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.9rem 1rem; background: rgba(255,255,255,0.02);">
-                            <span style="display: block; color: rgba(255,255,255,0.6); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem;">Features</span>
-                            <strong style="color: #fff; font-size: 0.9rem; line-height: 1.6;">Multi-exchange charts, live market data, technical overlays, dashboard tools</strong>
-                        </div>
-                        <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.9rem 1rem; background: rgba(255,255,255,0.02);">
-                            <span style="display: block; color: rgba(255,255,255,0.6); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem;">Stack</span>
-                            <strong style="color: #fff; font-size: 0.9rem; line-height: 1.6;">Vanilla JavaScript, HTML5 Canvas, REST and WebSocket APIs</strong>
-                        </div>
-                    </div>
-                </aside>
+            <!-- Bold Tactile CTA Button -->
+            <div class="pt-2">
+                <a href="https://bnwt.pages.dev/" target="_blank" rel="noopener noreferrer"
+                   class="group inline-flex items-center justify-center gap-3 px-8 py-4 text-base sm:text-lg font-mono font-bold uppercase tracking-wider bg-white text-black border-2 border-white rounded-lg hover:bg-black hover:text-white active:scale-[0.99] transition-all duration-200 shadow-[0_0_0_1px_#ffffff]">
+                    <span>Go to BNWT</span>
+                    <svg class="w-5 h-5 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
             </div>
-        </div>
-    </section>
-    
-    <!--
-    <section id="repositories" style="position: relative; z-index: 4; width: min(1100px, calc(100% - 2rem)); margin: 0 auto 4rem; padding: 0 0 2rem;">
-        <div style="background: rgba(10,10,10,0.72); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; overflow: hidden; box-shadow: 0 18px 45px rgba(0,0,0,0.3);">
-            <div style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); color: #ffde59; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;">
-                Automation & Bot Projects
-            </div>
-            <div style="padding: 1.5rem 1.5rem 1.2rem;">
-                <p style="color: rgba(255,255,255,0.8); margin: 0 0 1rem; line-height: 1.7;">A selection of Python-based automation and Steem-focused projects, highlighting practical backend work, data-driven tooling, and bot systems.</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.8rem;">
-                    <a href="https://github.com/gikunju-muriuki/Gikunju_Steem_Post" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">Gikunju_Steem_Post</a>
-                    <a href="https://github.com/gikunju-muriuki/STEEMPOST" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">STEEMPOST</a>
-                    <a href="https://github.com/gikunju-muriuki/UPVOTE" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">UPVOTE</a>
-                    <a href="https://github.com/gikunju-muriuki/UPVOTE2" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">UPVOTE2</a>
-                    <a href="https://github.com/gikunju-muriuki/REWARD" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">REWARD</a>
-                    <a href="https://github.com/gikunju-muriuki/Steem-Poker" style="display:block; text-decoration:none; padding: 0.8rem 0.9rem; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); color: #fff;">Steem-Poker</a>
+
+            <!-- Developer Credit Bar -->
+            <div class="pt-10 border-t border-hairline flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-muted">
+                <div class="text-white font-bold uppercase tracking-wider">
+                    Engineered &amp; Architected by Gikunju Muriuki
+                </div>
+                <div>
+                    BNWT v11 Technical Specification • https://bnwt.pages.dev/
                 </div>
             </div>
         </div>
-    </section>
-    -->
+    </footer>
 
-    <!-- Javascript for Active Particle Canvas Animation -->
+    <!-- Lightweight Scroll Progress Script -->
     <script>
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
+        (function () {
+            const progressBar = document.getElementById('reading-progress');
+            if (!progressBar) return;
 
-        let particlesArray = [];
-        const numberOfParticles = 65;
-
-        // Automatically match browser sizing
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // Particle blueprints matching theme palettes
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() * 0.4) - 0.2;
-                this.speedY = -(Math.random() * 0.5 + 0.1); // Steady slow floating upward motion
-                // Alternates particle colors between jacket blue and shirt yellow
-                this.color = Math.random() > 0.5 ? '#38b6ff' : '#ffde59';
-                this.opacity = Math.random() * 0.5 + 0.2;
+            function updateProgress() {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const percent = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+                progressBar.style.width = percent + '%';
             }
 
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                // Loop seamlessly back to bottom if particle exits off screen top
-                if (this.y < 0) {
-                    this.y = canvas.height;
-                    this.x = Math.random() * canvas.width;
-                }
-                if (this.x < 0 || this.x > canvas.width) {
-                    this.speedX = -this.speedX;
-                }
-            }
-
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            requestAnimationFrame(animate);
-        }
-
-        init();
-        animate();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress, { passive: true });
+            updateProgress();
+        })();
     </script>
 </body>
 </html>
